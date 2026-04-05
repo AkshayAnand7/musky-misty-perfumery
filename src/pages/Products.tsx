@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Search, SlidersHorizontal, X } from 'lucide-react';
+import { Search, SlidersHorizontal, X, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ProductCard from '@/components/ProductCard';
 import { useWishlist } from '@/hooks/useWishlist';
@@ -9,8 +9,8 @@ import products from '@/data/products.json';
 const categories = ['All', 'Oud', 'Fresh', 'Sweet', 'Luxury'];
 const sortOptions = [
   { label: 'Default', value: 'default' },
-  { label: 'Price: Low to High', value: 'low' },
-  { label: 'Price: High to Low', value: 'high' },
+  { label: 'Price: Low → High', value: 'low' },
+  { label: 'Price: High → Low', value: 'high' },
 ];
 
 const Products = () => {
@@ -62,77 +62,78 @@ const Products = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-10"
+          className="text-center mb-12"
         >
-          <p className="text-xs tracking-[0.3em] uppercase text-primary/70 mb-3 font-body">Discover</p>
-          <h1 className="font-heading text-3xl md:text-5xl gradient-gold-text">Our Collection</h1>
+          <p className="text-[10px] tracking-[0.4em] uppercase text-primary/60 mb-4 font-body font-light">Discover</p>
+          <h1 className="font-heading text-3xl md:text-5xl gradient-gold-text mb-3">Our Collection</h1>
+          <p className="text-sm text-muted-foreground font-body">Over 100 premium fragrances to explore</p>
         </motion.div>
 
-        {/* Search & Filter Bar */}
-        <div className="flex flex-col md:flex-row gap-4 mb-8">
-          <div className="relative flex-1">
-            <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
+        {/* Search Bar */}
+        <div className="max-w-xl mx-auto mb-10">
+          <div className="relative">
+            <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
             <input
               type="text"
               placeholder="Search fragrances..."
               value={search}
               onChange={e => setSearch(e.target.value)}
-              className="w-full pl-12 pr-4 py-3 rounded-xl glass border border-border/30 bg-card text-foreground placeholder:text-muted-foreground font-body text-sm focus:outline-none focus:border-primary/50 transition-colors"
+              className="w-full pl-11 pr-10 py-3 rounded-full bg-card border border-border/20 text-foreground placeholder:text-muted-foreground/50 font-body text-sm focus:outline-none focus:border-primary/40 transition-colors"
             />
             {search && (
               <button onClick={() => setSearch('')} className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
-                <X size={16} />
+                <X size={14} />
               </button>
             )}
           </div>
-          <button
-            onClick={() => setShowFilters(!showFilters)}
-            className="md:hidden flex items-center justify-center gap-2 glass border border-border/30 rounded-xl px-4 py-3 text-sm text-foreground/70 font-body"
-          >
-            <SlidersHorizontal size={16} /> Filters
-          </button>
         </div>
 
-        {/* Filters */}
-        <div className={`${showFilters ? 'block' : 'hidden'} md:block mb-8`}>
-          <div className="flex flex-col md:flex-row md:items-center gap-4">
-            {/* Categories */}
-            <div className="flex flex-wrap gap-2">
-              {categories.map(cat => (
-                <button
-                  key={cat}
-                  onClick={() => handleCategoryChange(cat)}
-                  className={`px-4 py-2 rounded-full text-xs tracking-widest uppercase font-body transition-all duration-300 ${
-                    category === cat
-                      ? 'gradient-gold-btn text-primary-foreground gold-glow'
-                      : 'glass border border-border/30 text-foreground/60 hover:border-primary/30 hover:text-primary'
-                  }`}
-                >
-                  {cat}
-                </button>
-              ))}
-            </div>
+        {/* Filter Bar */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+          {/* Categories */}
+          <div className="flex flex-wrap gap-2">
+            {categories.map(cat => (
+              <button
+                key={cat}
+                onClick={() => handleCategoryChange(cat)}
+                className={`px-4 py-2 rounded-full text-[10px] tracking-[0.15em] uppercase font-body transition-all duration-300 ${
+                  category === cat
+                    ? 'gradient-gold-btn text-primary-foreground'
+                    : 'bg-card border border-border/20 text-foreground/50 hover:border-primary/30 hover:text-primary'
+                }`}
+              >
+                {cat}
+                {cat !== 'All' && (
+                  <span className="ml-1.5 opacity-50">
+                    {products.filter(p => cat === 'All' || p.category === cat).length}
+                  </span>
+                )}
+              </button>
+            ))}
+          </div>
 
-            {/* Sort */}
+          {/* Sort */}
+          <div className="relative">
             <select
               value={sort}
               onChange={e => setSort(e.target.value)}
-              className="ml-auto bg-card border border-border/30 rounded-xl px-4 py-2.5 text-sm font-body text-foreground/70 focus:outline-none focus:border-primary/50"
+              className="appearance-none bg-card border border-border/20 rounded-full pl-4 pr-10 py-2 text-xs font-body text-foreground/60 focus:outline-none focus:border-primary/40 cursor-pointer"
             >
               {sortOptions.map(opt => (
                 <option key={opt.value} value={opt.value}>{opt.label}</option>
               ))}
             </select>
+            <ChevronDown size={12} className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
           </div>
         </div>
 
         {/* Results count */}
-        <p className="text-sm text-muted-foreground mb-6 font-body">
+        <p className="text-[10px] text-muted-foreground/60 mb-6 font-body tracking-wider uppercase">
           {filtered.length} fragrance{filtered.length !== 1 ? 's' : ''} found
         </p>
 
         {/* Product Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-5">
           <AnimatePresence>
             {filtered.map(p => (
               <ProductCard
@@ -149,8 +150,14 @@ const Products = () => {
         </div>
 
         {filtered.length === 0 && (
-          <div className="text-center py-20">
-            <p className="text-muted-foreground font-body">No fragrances found matching your criteria.</p>
+          <div className="text-center py-24">
+            <p className="text-muted-foreground font-body text-sm">No fragrances found matching your criteria.</p>
+            <button
+              onClick={() => { setSearch(''); handleCategoryChange('All'); }}
+              className="mt-4 text-primary text-xs font-body hover:underline"
+            >
+              Clear filters
+            </button>
           </div>
         )}
       </div>
