@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Heart, Trash2 } from 'lucide-react';
+import { Heart } from 'lucide-react';
 import { motion } from 'framer-motion';
 import ProductCard from '@/components/ProductCard';
 import { useWishlist } from '@/hooks/useWishlist';
@@ -15,17 +15,19 @@ const Wishlist = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-10"
+          className="text-center mb-14"
         >
-          <Heart size={32} className="mx-auto mb-4 text-primary" />
-          <h1 className="font-heading text-3xl md:text-5xl gradient-gold-text">Your Wishlist</h1>
-          <p className="text-sm text-muted-foreground mt-3 font-body">
+          <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-5">
+            <Heart size={22} className="text-primary" />
+          </div>
+          <h1 className="font-heading text-3xl md:text-5xl gradient-gold-text mb-3">Your Wishlist</h1>
+          <p className="text-xs text-muted-foreground font-body tracking-wider">
             {wishlisted.length} fragrance{wishlisted.length !== 1 ? 's' : ''} saved
           </p>
         </motion.div>
 
         {wishlisted.length > 0 ? (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-5">
             {wishlisted.map(p => (
               <ProductCard
                 key={p.id}
@@ -39,11 +41,11 @@ const Wishlist = () => {
             ))}
           </div>
         ) : (
-          <div className="text-center py-20">
-            <p className="text-muted-foreground font-body mb-6">Your wishlist is empty.</p>
+          <div className="text-center py-24">
+            <p className="text-muted-foreground font-body text-sm mb-8">Your wishlist is empty. Start adding your favorite fragrances.</p>
             <Link
               to="/products"
-              className="inline-block gradient-gold-btn text-primary-foreground font-body font-semibold tracking-widest uppercase text-sm px-8 py-3 rounded-full gold-glow hover:gold-glow-strong transition-all duration-300"
+              className="inline-block gradient-gold-btn text-primary-foreground font-body font-semibold tracking-[0.2em] uppercase text-xs px-10 py-3.5 rounded-full gold-glow hover:gold-glow-strong transition-all duration-300 hover:scale-105"
             >
               Explore Collection
             </Link>
